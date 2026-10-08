@@ -1,0 +1,6 @@
+﻿Create a dashboard for the orders database.
+
+Audience: DBA on-call.
+Must show: query throughput, p95 query latency, connection pool utilization, replication lag, deadlocks per minute.
+Time range: 1h. Refresh every 30 seconds.
+Owner team: data-platform. Environment: production.

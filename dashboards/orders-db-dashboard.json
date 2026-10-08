@@ -1,0 +1,96 @@
+{
+  "apiVersion": "rmp/v1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "orders-db-dashboard",
+    "title": "Orders Database Performance Dashboard",
+    "description": "On-call DBA dashboard for monitoring orders database health, throughput, latency, connections, replication, and deadlocks.",
+    "owner": "data-platform",
+    "tags": [
+      "env:production",
+      "team:data-platform",
+      "owner:data-platform"
+    ]
+  },
+  "spec": {
+    "refreshIntervalSeconds": 30,
+    "timeRange": "1h",
+    "panels": [
+      {
+        "id": "query_throughput",
+        "title": "Query Throughput",
+        "type": "timeseries",
+        "metric": "rmp.db.queries.rate",
+        "unit": "count"
+      },
+      {
+        "id": "p95_query_latency",
+        "title": "p95 Query Latency",
+        "type": "timeseries",
+        "metric": "rmp.db.queries.latency.p95",
+        "unit": "ms",
+        "thresholds": [
+          {
+            "value": 100,
+            "severity": "warning"
+          },
+          {
+            "value": 500,
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "id": "connection_pool_util",
+        "title": "Connection Pool Utilization",
+        "type": "gauge",
+        "metric": "rmp.db.connections.utilization",
+        "unit": "percent",
+        "thresholds": [
+          {
+            "value": 80,
+            "severity": "warning"
+          },
+          {
+            "value": 95,
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "id": "replication_lag",
+        "title": "Replication Lag",
+        "type": "timeseries",
+        "metric": "rmp.db.replication.lag_ms",
+        "unit": "ms",
+        "thresholds": [
+          {
+            "value": 5000,
+            "severity": "warning"
+          },
+          {
+            "value": 30000,
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "id": "deadlocks_per_minute",
+        "title": "Deadlocks per Minute",
+        "type": "stat",
+        "metric": "rmp.db.deadlocks.rate",
+        "unit": "count",
+        "thresholds": [
+          {
+            "value": 1,
+            "severity": "warning"
+          },
+          {
+            "value": 5,
+            "severity": "critical"
+          }
+        ]
+      }
+    ]
+  }
+}
