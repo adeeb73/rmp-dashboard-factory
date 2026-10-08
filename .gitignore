@@ -23,3 +23,8 @@ deployed/*.json
 
 # Downloaded CI artifacts
 artifacts/
+
+# Downloaded CI artifacts
+artifacts/
+candidate/
+after_revert/
