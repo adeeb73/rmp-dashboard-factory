@@ -1,4 +1,4 @@
-title: RMP Customer Service API Availability
+title: RMP - Customer Service API Availability
 environment: demo
 tags:
 - owner
@@ -9,15 +9,19 @@ panels:
   metric: request_rate
   type: timeseries
   unit: requests/s
+  description: Rate of incoming API requests
 - name: Error Rate
   metric: error_rate
   type: timeseries
   unit: errors/s
+  description: Rate of API errors
 - name: Latency
   metric: latency
   type: timeseries
   unit: ms
+  description: API response latency
 - name: Availability
   metric: availability
   type: stat
   unit: percent
+  description: Customer Service API availability percentage
