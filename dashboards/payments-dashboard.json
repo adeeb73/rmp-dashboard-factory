@@ -1,0 +1,79 @@
+{
+  "apiVersion": "rmp/v1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "payments-dashboard",
+    "title": "Payments Service Performance Dashboard",
+    "description": "Monitoring dashboard for the payments service including request rate, latency, connection pool saturation, and error budget.",
+    "owner": "payments-team",
+    "tags": [
+      "env:production",
+      "team:payments",
+      "owner:payments-team"
+    ]
+  },
+  "spec": {
+    "refreshIntervalSeconds": 60,
+    "timeRange": "6h",
+    "panels": [
+      {
+        "id": "request_rate",
+        "title": "Request Rate",
+        "type": "timeseries",
+        "metric": "rmp.payments.requests.rate",
+        "unit": "count"
+      },
+      {
+        "id": "p99_latency",
+        "title": "P99 Latency",
+        "type": "timeseries",
+        "metric": "rmp.payments.latency.p99",
+        "unit": "ms",
+        "thresholds": [
+          {
+            "value": 200,
+            "severity": "warning"
+          },
+          {
+            "value": 500,
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "id": "conn_pool_saturation",
+        "title": "Connection Pool Saturation",
+        "type": "gauge",
+        "metric": "rmp.payments.connection_pool.saturation",
+        "unit": "percent",
+        "thresholds": [
+          {
+            "value": 80,
+            "severity": "warning"
+          },
+          {
+            "value": 95,
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "id": "error_budget_status",
+        "title": "Error Budget Remaining",
+        "type": "table",
+        "metric": "rmp.payments.error_budget.remaining",
+        "unit": "percent",
+        "thresholds": [
+          {
+            "value": 10,
+            "severity": "warning"
+          },
+          {
+            "value": 2,
+            "severity": "critical"
+          }
+        ]
+      }
+    ]
+  }
+}
