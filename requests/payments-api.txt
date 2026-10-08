@@ -1,0 +1,6 @@
+Create a dashboard for the payments API.
+
+Audience: on-call SRE.
+Must show: request rate, p99 latency, error rate, saturation of the connection pool.
+Time range: 6h. Refresh every 60 seconds.
+Owner team: payments. Environment: production.

@@ -1,0 +1,126 @@
+name: rmp-dashboard-pipeline
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      request:
+        description: "Natural-language dashboard request (manual runs only)"
+        required: false
+        default: "Create a dashboard for the payments API: request rate, p99 latency, error rate, and connection pool saturation."
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.11"
+  TERRAFORM_VERSION: "1.9.8"
+
+jobs:
+  validate:
+    name: Validate dashboards (deterministic gate)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate every dashboard definition
+        run: python scripts/validate.py --all
+
+      - name: Upload validated definitions
+        uses: actions/upload-artifact@v4
+        with:
+          name: validated-dashboards
+          path: dashboards/*.json
+          if-no-files-found: error
+          retention-days: 14
+
+  deploy:
+    name: Deploy to mock RMP (main only)
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Terraform init
+        working-directory: terraform
+        run: terraform init -input=false
+
+      - name: Terraform apply
+        working-directory: terraform
+        run: terraform apply -auto-approve -input=false
+
+      - name: Verify deployment output exists
+        run: |
+          test -d deployed
+          test -f deployed/manifest.json
+
+      - name: Upload deployed artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployed-dashboards
+          path: |
+            deployed/*.json
+          if-no-files-found: error
+          retention-days: 14
+
+  generate:
+    name: Generate candidate dashboard (manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate candidate with Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/generate.py --request "${{ github.event.inputs.request }}" --out dashboards/
+
+      - name: Validate the candidate
+        run: python scripts/validate.py --all
+
+      - name: Upload candidate for human review
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-dashboard
+          path: dashboards/*.json
+          if-no-files-found: error
+          retention-days: 14

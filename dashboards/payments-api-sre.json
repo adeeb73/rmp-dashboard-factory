@@ -1,0 +1,79 @@
+{
+  "apiVersion": "rmp/v1",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "payments-api-sre",
+    "title": "Payments API SRE Dashboard",
+    "description": "SRE dashboard for monitoring the payments API request rate, latency, error rate, and connection pool saturation.",
+    "owner": "payments-team",
+    "tags": [
+      "env:production",
+      "team:payments",
+      "owner:payments-team"
+    ]
+  },
+  "spec": {
+    "refreshIntervalSeconds": 60,
+    "timeRange": "6h",
+    "panels": [
+      {
+        "id": "request_rate",
+        "title": "Request Rate",
+        "type": "timeseries",
+        "metric": "rmp.payments.request_rate",
+        "unit": "count"
+      },
+      {
+        "id": "p99_latency",
+        "title": "P99 Latency",
+        "type": "timeseries",
+        "metric": "rmp.payments.latency_p99",
+        "unit": "ms",
+        "thresholds": [
+          {
+            "value": 200,
+            "severity": "warning"
+          },
+          {
+            "value": 500,
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "id": "error_rate",
+        "title": "Error Rate",
+        "type": "timeseries",
+        "metric": "rmp.payments.error_rate",
+        "unit": "percent",
+        "thresholds": [
+          {
+            "value": 1,
+            "severity": "warning"
+          },
+          {
+            "value": 5,
+            "severity": "critical"
+          }
+        ]
+      },
+      {
+        "id": "conn_pool_saturation",
+        "title": "Connection Pool Saturation",
+        "type": "gauge",
+        "metric": "rmp.payments.connection_pool_saturation",
+        "unit": "percent",
+        "thresholds": [
+          {
+            "value": 80,
+            "severity": "warning"
+          },
+          {
+            "value": 95,
+            "severity": "critical"
+          }
+        ]
+      }
+    ]
+  }
+}

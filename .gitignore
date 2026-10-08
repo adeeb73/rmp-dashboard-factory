@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local secrets
+.env
+*.key
+*.pem
+
+# Gemini response cache
+.cache/
+
+# Terraform local state and providers
+terraform/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Mock RMP output (regenerated on every deploy)
+deployed/*.json
