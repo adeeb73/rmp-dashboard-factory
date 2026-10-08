@@ -4,7 +4,7 @@
   "metadata": {
     "name": "payments-api-sre",
     "title": "Payments API SRE Dashboard",
-    "description": "SRE dashboard for monitoring the payments API request rate, latency, error rate, and connection pool saturation.",
+    "description": "Production monitoring dashboard for the payments API, tracking key SRE metrics including rate, errors, latency, and saturation.",
     "owner": "payments-team",
     "tags": [
       "env:production",
@@ -20,22 +20,26 @@
         "id": "request_rate",
         "title": "Request Rate",
         "type": "timeseries",
-        "metric": "rmp.payments.request_rate",
+        "metric": "rmp.payments.requests.rate",
         "unit": "count"
       },
       {
         "id": "p99_latency",
         "title": "P99 Latency",
         "type": "timeseries",
-        "metric": "rmp.payments.latency_p99",
+        "metric": "rmp.payments.latency.p99",
         "unit": "ms",
         "thresholds": [
           {
             "value": 200,
-            "severity": "warning"
+            "severity": "info"
           },
           {
             "value": 500,
+            "severity": "warning"
+          },
+          {
+            "value": 1000,
             "severity": "critical"
           }
         ]
@@ -43,16 +47,16 @@
       {
         "id": "error_rate",
         "title": "Error Rate",
-        "type": "timeseries",
-        "metric": "rmp.payments.error_rate",
-        "unit": "percent",
+        "type": "stat",
+        "metric": "rmp.payments.errors.ratio",
+        "unit": "ratio",
         "thresholds": [
           {
-            "value": 1,
+            "value": 0.01,
             "severity": "warning"
           },
           {
-            "value": 5,
+            "value": 0.05,
             "severity": "critical"
           }
         ]
@@ -61,15 +65,15 @@
         "id": "conn_pool_saturation",
         "title": "Connection Pool Saturation",
         "type": "gauge",
-        "metric": "rmp.payments.connection_pool_saturation",
+        "metric": "rmp.payments.connection_pool.saturation",
         "unit": "percent",
         "thresholds": [
           {
-            "value": 80,
+            "value": 75,
             "severity": "warning"
           },
           {
-            "value": 95,
+            "value": 90,
             "severity": "critical"
           }
         ]
