@@ -1,0 +1,17 @@
+title_prefix: "RMP"
+required_tags:
+  - owner
+  - application
+  - environment
+allowed_panel_types:
+  - timeseries
+  - stat
+  - table
+  - gauge
+forbidden_metric_substrings:
+  - password
+  - secret
+  - token
+  - api_key
+max_panels: 12
+min_panels: 1

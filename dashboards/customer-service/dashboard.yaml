@@ -1,0 +1,23 @@
+title: RMP Customer Service API Availability
+environment: demo
+tags:
+- owner
+- application
+- environment
+panels:
+- name: Request Rate
+  metric: request_rate
+  type: timeseries
+  unit: requests/s
+- name: Error Rate
+  metric: error_rate
+  type: timeseries
+  unit: errors/s
+- name: Latency
+  metric: latency
+  type: timeseries
+  unit: ms
+- name: Availability
+  metric: availability
+  type: stat
+  unit: percent

@@ -1,0 +1,53 @@
+name: Dashboard Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dashboards/**'
+      - 'schemas/**'
+      - 'standards/**'
+      - 'validation/**'
+      - 'terraform/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'dashboards/**'
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Validate every dashboard
+        run: |
+          for f in dashboards/*/dashboard.yaml; do
+            echo "::group::Validating $f"
+            python validation/validate.py "$f"
+            echo "::endgroup::"
+          done
+
+  deploy-demo:
+    name: Deploy to Demo
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.9.5'
+      - name: Apply
+        working-directory: terraform/demo
+        run: |
+          terraform init
+          terraform apply -auto-approve
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deployed-dashboards
+          path: deployed/

@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "title": { "type": "string", "description": "Human-readable dashboard title" },
+    "environment": { "type": "string", "enum": ["demo", "nonprod", "prod", "regional"] },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "panels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "metric": { "type": "string" },
+          "type": { "type": "string", "enum": ["timeseries", "stat", "table", "gauge"] },
+          "unit": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["name", "metric", "type"]
+      }
+    }
+  },
+  "required": ["title", "environment", "tags", "panels"]
+}

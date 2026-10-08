@@ -1,0 +1,23 @@
+title: API Availability
+environment: demo
+tags:
+  - owner
+  - application
+  - environment
+panels:
+  - name: Request Rate
+    metric: http_requests_total
+    type: timeseries
+    unit: requests/s
+  - name: Error Rate
+    metric: http_requests_errors_total
+    type: timeseries
+    unit: errors/s
+  - name: Latency (p95)
+    metric: http_request_duration_seconds
+    type: timeseries
+    unit: seconds
+  - name: Availability
+    metric: up
+    type: stat
+    unit: percent
