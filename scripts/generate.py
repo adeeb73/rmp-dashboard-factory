@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 """Generate an RMP dashboard definition with Google Gemini.
 
 AI is a CANDIDATE GENERATOR ONLY.
@@ -274,7 +274,7 @@ def main(argv=None) -> int:
         log("        current session: $env:GEMINI_API_KEY = \"AIza...\"")
         log("        permanent:       [Environment]::SetEnvironmentVariable(\"GEMINI_API_KEY\",\"AIza...\",\"User\")")
         return 2
-    if not api_key.startswith("AIza"):
+    if not (api_key.startswith("AIza") or api_key.startswith("AQ.")):
         log("[warn] GEMINI_API_KEY does not start with 'AIza'. Continuing anyway.")
 
     try:

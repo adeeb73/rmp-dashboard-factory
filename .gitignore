@@ -20,3 +20,6 @@ crash.log
 
 # Mock RMP output (regenerated on every deploy)
 deployed/*.json
+
+# Downloaded CI artifacts
+artifacts/
