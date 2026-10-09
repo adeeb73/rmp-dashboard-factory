@@ -39,3 +39,7 @@ Output lands in `deployed/`.
 platform. Replace it (or replace the `null_resource` in `terraform/main.tf`
 with a real provider resource) and the workflow, schema, validator, and Git
 history all stay exactly the same.
+
+## User manual
+
+For detailed setup, generation, validation, deployment, rollback, and troubleshooting instructions, see [MANUAL.md](MANUAL.md).
